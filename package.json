@@ -1,0 +1,14 @@
+{
+  "name": "JSON-XML-Parser",
+  "version": "1.0.0",
+  "description": "A module for converting between XML format and JSON objects",
+  "main": "app.js",
+  "author": {
+    "name": "Dor",
+    "email": "dormesica10@gmail.com"
+  },
+  "dependencies": {
+    "linq": "^3.0.5",
+    "xmlbuilder": "^2.6.4"
+  }
+}
