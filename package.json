@@ -1,6 +1,6 @@
 {
   "name": "json-xml-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A module for converting between XML format and JSON objects",
   "main": "app.js",
   "author": {
