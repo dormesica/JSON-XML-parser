@@ -47,4 +47,46 @@ describe('JSON to XML conversion', () => {
             );
         });
     });
+
+    describe('Complex types', () => {
+        it('converts a nested object', () => {
+            const result = jsonToXml({
+                inner: {
+                    number: 1,
+                    evenInner: {
+                        number: '2',
+                    },
+                },
+            });
+
+            expect(trimWhiteSpaces(result.toString())).toEqual(
+                '<data><inner><number>1</number><evenInner><number>2</number></evenInner></inner></data>'
+            );
+        });
+
+        it('converts an array of objects', () => {
+            const result = jsonToXml({
+                array: [
+                    {
+                        number: 1
+                    },
+                    {
+                        string: 'string',
+                    }
+                ],
+            });
+
+            expect(trimWhiteSpaces(result.toString())).toEqual(
+                '<data><array><value><number>1</number></value><value><string>string</string></value></array></data>'
+            );
+        });
+
+        it('converts an array numbers', () => {
+            const result = jsonToXml([1, 2, 3, 4]);
+
+            expect(trimWhiteSpaces(result.toString())).toEqual(
+                '<data><value>1</value><value>2</value><value>3</value><value>4</value></data>'
+            );
+        });
+    });
 });
