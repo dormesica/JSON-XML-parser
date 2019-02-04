@@ -29,62 +29,41 @@ function jsonToXml(json, dict) {
     dict = dict === null ? undefined : dict; // handle null as undefined
     dict = generateDictionary(json, dict);
 
-    // create the xml object
     const xml = xmlBuilder.create(dict.head);
 
     // create the queue and initialize it with the json fields
-    // var queue = [];
-    const queue = Object.entries(json).map(([key, value]) => ({
-        parent: xml,
-        name: dict[key],
-        value,
-    }));
-    // for (var field in json) {
-    //     queue.push({
-    //         parent: xml,
-    //         name: dict[field],
-    //         value: json[field],
-    //     });
-    // }
+    const queue = [
+        {
+            xmlElem: xml,
+            value: json,
+        },
+    ];
 
     // add the values to the xml
-    while (queue.length != 0) {
-        let curr = queue.shift(); // get the next value from the queue
+    while (queue.length !== 0) {
+        const curr = queue.shift(); // get the next value from the queue
 
         if (Array.isArray(curr.value)) {
-            const arrayRoot = curr.parent.ele(curr.name);
-
             // add the elements in the array to the queue with arrayRoot as
             // parent element and curr.name as element name
             curr.value.forEach(elem => {
                 queue.push({
-                    parent: arrayRoot,
-                    name: 'value',
+                    xmlElem: curr.xmlElem.ele('value'),
                     value: elem,
                 });
             });
         } else if (isObject(curr.value)) {
-            const objectRoot = curr.parent.ele(curr.name);
-
             // add each field of the object to the array with objectRoot as
             // it's parent and dict[field_name] as the element name
             Object.entries(curr.value).forEach(([key, value]) => {
                 queue.push({
-                    parent: objectRoot,
-                    name: dict[key],
+                    xmlElem: curr.xmlElem.ele(key),
                     value,
                 });
             });
-            // for (var field in curr.value) {
-            //     queue.push({
-            //         parent: objectRoot,
-            //         name: dict[field],
-            //         value: curr.value[field],
-            //     });
-            // }
         } else {
             // else, for regular elements
-            curr.parent.ele(curr.name, {}, curr.value);
+            curr.xmlElem.text(curr.value);
         }
     }
 
@@ -120,7 +99,7 @@ function generateDictionary(json, dict) {
 
     const queue = [json];
 
-    while (queue.length != 0) {
+    while (queue.length !== 0) {
         const obj = queue.shift();
 
         for (let field in obj) {
